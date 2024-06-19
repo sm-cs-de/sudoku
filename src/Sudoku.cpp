@@ -1,9 +1,9 @@
-#include "Solver.h"
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
 #include <cmath>
 #include <cctype>
+#include "Solver.hpp"
 
 using namespace std;
 
@@ -83,12 +83,12 @@ bool Sudoku::read(const string argv) {
 	}
 	ifs.close();
 
-	cout << "\n~ Eingegebenes Sudoku:\n" << endl;
+	cout << "~ Eingegebenes Sudoku:" << endl;
 	this->print_s(false);
-	cout << "\n~ Sonstige Daten:\n" << endl;
-	cout << "\tSeitenlänge:\t" << length << endl;
-	cout << "\tBlocklänge:\t" << blocklength << endl;
-	cout << "\tStartwerte:\t" << startdates << endl;
+	cout << "~ Sonstige Daten:" << endl;
+	cout << "\tSeitenlänge:\t"  << length << endl;
+	cout << "\tBlocklänge:\t"   << blocklength << endl;
+	cout << "\tStartwerte:\t"   << startdates << endl;
 
 	if(!this->check_in()) {
 		this->print_s(false);
@@ -188,11 +188,9 @@ bool Sudoku::print_s(const bool cases, const string argv) const {
 	ostream *os = NULL;
 	ofstream ofs;
 	bool color = true;
+	bool file  = (argv.size() > 0);
 
-	if(argv.size() == 0) {
-		os = &cout;
-
-	} else {
+	if(file) {
 		ofs.open(argv.c_str(), ios::out);
 
 		if(!ofs.is_open()) {
@@ -201,18 +199,41 @@ bool Sudoku::print_s(const bool cases, const string argv) const {
 		}
 		color = false;
 		os = &ofs;
+	} else {
+		os = &cout;
 	}
 
 	for(int i=0; i<length; i++) {
+		if (!file) {
+			*os << "\t";
+		}
 		for(int j=0; j<length; j++) {
 			if(!os->fail()) {
 				*os << dates[i][j].print_date(cases, color) << " " << flush;
+				if (j>0 && (j+1)%blocklength == 0 && j<length-1) {
+					*os << "|";
+				}
 			} else {
 				cout << "#Fehler:\tI/O-Fehler!" << endl;
 				return false;
 			}
 		}
 		*os << endl;
+
+		if (i>0 && (i+1)%blocklength == 0 && i<length-1) {
+			*os << "\t";
+			for(int j=0; j<length; j++) {
+				if (length >= 10) {
+					*os << "-";
+				}
+				if (j>0 && (j+1)%blocklength == 0 && j<length-1) {
+					*os << "--+";
+				} else {
+					*os << "--";
+				}
+			}
+			*os << flush << endl;
+		}
 	}
 
 	if(argv.size() != 0) {
@@ -222,7 +243,7 @@ bool Sudoku::print_s(const bool cases, const string argv) const {
 	return true;
 }
 
-int Sudoku::remainingdates() const {
+int Sudoku::remain() const {
 	int remain = 0;
 
 	for(int i=0; i<length; i++) {

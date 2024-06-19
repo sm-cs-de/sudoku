@@ -5,10 +5,11 @@
 
 unsigned int bit_pow(const int exp);
 int int_div(const int numerator, const int denominator);
+
 class Field;
 
-class Sudoku {
 
+class Sudoku {
 	private:
 		Field **dates;
 		int length;
@@ -26,14 +27,14 @@ class Sudoku {
 
 		bool read(const std::string argv);
 		bool print_s(const bool cases, const std::string argv = "") const;
-		int remainingdates() const;
+		int remain() const;
 
-		bool solve();
+		void solve();
 
 };
 
-class Field {
 
+class Field {
 	private:
 		unsigned int date;
 		int length;
@@ -67,5 +68,6 @@ class Field {
 		bool single();
 		bool line(const bool box_counts) const;
 };
+
 
 #endif

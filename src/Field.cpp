@@ -1,6 +1,6 @@
-#include "Solver.h"
 #include <cstdlib>
 #include <cstdio>
+#include "Solver.hpp"
 
 using namespace std;
 
@@ -116,9 +116,9 @@ string Field::print_date(const bool cases, const bool color) const {
 
 	if (!cases && (possible > 1)) {
 		if (length < 10) {
-			sdate.append("-");
+			sdate.append("~");
 		} else {
-			sdate.append("--");
+			sdate.append("~~");
 		}
 
 	} else {
