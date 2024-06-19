@@ -10,7 +10,7 @@ Sudoku::~Sudoku() {
 			delete m_dates[i][j];
 		}
 	}
-	if(m_dates != nullptr) {
+	if(m_dates) {
 		free(m_dates);
 	}
 }
@@ -24,7 +24,7 @@ bool Sudoku::read(const string argv) {
 	}
 
 	uint32_t count = 0;
-	char inc, prec = ' ';
+	char inc = 0, prec = ' ';
 	while(true) {
 		inc = ifs.get();								// TODO: Das ist immer so umständlich mit get(), weil es nur zeichenweise einliest
 		if(ifs.eof()) {
@@ -48,7 +48,7 @@ bool Sudoku::read(const string argv) {
 		cout << "#Fehler:\tDie Werteanzahl muss quadratisch sein! (aktuelle Länge: " << sqr << "-" << count <<")" << endl;
 		return false;
 	}
-	count = (uint32_t) sqr;
+	count = static_cast<uint32_t>(sqr);
 
 	if(count > 32) {	// 32-Bit System :>
 		cout << "#Fehler:\tDie Seitenlänge darf nicht größer als 32 sein! (aktuelle Länge: " << count << ")" << endl;
@@ -67,7 +67,7 @@ bool Sudoku::read(const string argv) {
 	ifs.clear();
 	ifs.seekg(ios::beg);
 
-	uint32_t num;
+	uint32_t num = 0;
 	for(uint32_t i=0; i<count; i++) {
 		for(uint32_t j=0; j<count; j++) {
 			ifs >> num;
@@ -129,13 +129,12 @@ bool Sudoku::set_data(const uint32_t size) {
 }
 
 bool Sudoku::fill(const uint32_t date, const uint32_t i, const uint32_t j) {
-
-	if((i<0) || (i>=m_length) || (j<0) || (j>=m_length)) {
+	if((i>=m_length) || (j>=m_length)) {
 		cout << "#Fehler:\tIndex falsch! (" << i << "," << j << ")" << endl;
 		return false;
 	}
 
-	if((date<0) || (date>m_length)) {
+	if(date>m_length) {
 		cout << "#Fehler:\tDatum ungültig! (" << date << ")" << endl;
 		return false;
 	}
@@ -152,7 +151,6 @@ bool Sudoku::fill(const uint32_t date, const uint32_t i, const uint32_t j) {
 }
 
 bool Sudoku::check_in() {
-
 	bool changed = true;
 	while(changed) {
 		changed = false;
@@ -176,7 +174,6 @@ bool Sudoku::check_in() {
 }
 
 bool Sudoku::print_s(const bool cases, const string argv) const {
-
 	ostream *os = nullptr;
 	ofstream ofs;
 	bool color = true;

@@ -71,10 +71,10 @@ class Field {
 		std::string 	print_date(const bool cases, const bool color) const;
 		inline uint32_t get_possible() const {return m_possible; }
 
-		bool erase(const bool box_counts) const;
-		bool compare(const bool box_counts) const;
-		bool single();
-		bool line(const bool box_counts) const;
+		bool erase(const bool box_counts) const; 	/* löscht Wert aus anderen Feldern wenn unikat */
+		bool compare(const bool box_counts) const;	/* Erweiterung von erase für Paare, Trippel, usw. */
+		bool single();								/* löscht alle Werte die nicht unikat sind (wenn dieser Fall zutrifft) */
+		bool line(const bool box_counts) const;		/* löscht Werte aus anderen Boxen, wenn in dieser Box-Spalte/-Zeile unikat */
 };
 
 

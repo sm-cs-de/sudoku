@@ -41,7 +41,7 @@ void Sudoku::solve() {
 bool Field::erase(const bool box_counts) const {
 	if (m_possible > 1) { return false; }
 
-	uint32_t new_row, new_col, new_box;
+	uint32_t new_row = 0, new_col = 0, new_box = 0;
 	bool set = false;
 
 	for (uint32_t n=0; n<(m_length-1); n++) {
@@ -72,35 +72,41 @@ bool Field::erase(const bool box_counts) const {
 bool Field::compare(const bool box_counts) const {
 	if (m_possible == 1) { return false; }
 
-	uint32_t newdate;
+	uint32_t newdate = 0;
 	bool set = false;
 
-	if (this->check_row()) {
+	if (check_row()) {
 		for (uint32_t j=0; j<(m_length-1); j++) {
 			if (m_date != m_row[j]->get_date()) {
 				newdate = m_row[j]->get_date() & ~m_date;
-				if (newdate != m_row[j]->get_date()) { set = true; }
-				m_row[j]->set_date(newdate);
+				if (newdate != m_row[j]->get_date()) {
+					m_row[j]->set_date(newdate);
+					set = true;
+				}
 			}
 		}
 	}
 
-	if (this->check_col()) {
+	if (check_col()) {
 		for (uint32_t i=0; i<(m_length-1); i++) {
 			if (m_date != m_col[i]->get_date()) {
 				newdate = m_col[i]->get_date() & ~m_date;
-				if (newdate != m_col[i]->get_date()) { set = true; }
-				m_col[i]->set_date(newdate);
+				if (newdate != m_col[i]->get_date()) {
+					m_col[i]->set_date(newdate);
+					set = true;
+				}
 			}
 		}
 	}
 
-	if (box_counts && this->check_box()) {
+	if (box_counts && check_box()) {
 		for (uint32_t k=0; k<(m_length-1); k++) {
 			if (m_date != m_box[k]->get_date()) {
 				newdate = m_box[k]->get_date() & ~m_date;
-				if (newdate != m_box[k]->get_date()) { set = true; }
-				m_box[k]->set_date(newdate);
+				if (newdate != m_box[k]->get_date()) {
+					m_box[k]->set_date(newdate);
+					set = true;
+				}
 			}
 		}
 	}
@@ -118,15 +124,13 @@ bool Field::single() {
 		all_box |= m_box[n]->get_date();
 	}
 
-	uint32_t new_row , new_col, new_box;
-	new_row = m_date & ~all_row;
-	new_col = m_date & ~all_col;
-	new_box = m_date & ~all_box;
-
+	uint32_t new_row = m_date & ~all_row;
+	uint32_t new_col = m_date & ~all_col;
+	uint32_t new_box = m_date & ~all_box;
 
 	uint32_t newdate = new_row | new_col | new_box;
-	if (newdate) {
-		this->set_date(newdate);
+	if (newdate > 0) {
+		set_date(newdate);
 		return true;
 	}
 
@@ -158,7 +162,7 @@ bool Field::line(const bool box_counts) const {
 	uint32_t only_in_col = appear_in_col & ~appear_off_col;
 
 	bool set = false;
-	uint32_t newdate;
+	uint32_t newdate = 0;
 
 	if (only_in_row) {
 		for (uint32_t j=0; j<(m_length-1); j++) {

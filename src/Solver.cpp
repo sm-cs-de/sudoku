@@ -14,14 +14,12 @@ int main(int argc, char *argv[]) {
     }
 
     Sudoku *s = new Sudoku();
-
     if (!s->read(argv[1])) {
         cout << "#Fehler:\tDateiformat oder Eingabe von \"" << argv[1] << "\" ungültig!\n" << endl;
         return EXIT_FAILURE;
     }
 
 	cout << "~ Lösungsdaten und Lösung:" << endl;
-
 	timeval start, end;
 	gettimeofday(&start, 0);
 
@@ -36,12 +34,10 @@ int main(int argc, char *argv[]) {
 	}
 	cout << endl;
     
-    
     if (!s->print_s(true, string(argv[1]).append("-loesung"))) {
 		cout << "#Fehler:\tLösungsdatei konnte nicht geschrieben werden!\n" << endl;
         return EXIT_FAILURE;
     }
-
     s->print_s(false);
     delete s;
 
@@ -50,5 +46,5 @@ int main(int argc, char *argv[]) {
 
 /*
 TODO: Herausfinden, warum es bei `test_9` nicht richtig funktioniert
-TODO: 'line' hängt sich ab und zu auf
+TODO: 'line' hängt sich ab und zu auf (test_9c?)
 */
