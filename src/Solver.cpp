@@ -1,10 +1,7 @@
 #include "Solver.hpp"
 
-#include <iostream>
-#include <cstdlib>
-#include <sys/time.h>
-
 using namespace std;
+
 
 int main(int argc, char *argv[]) {
     cout << "~" << endl;
@@ -33,14 +30,14 @@ int main(int argc, char *argv[]) {
     gettimeofday(&end, 0);
     cout << "\tZeitbedarf: " << ((end.tv_sec-start.tv_sec)*1000 + (end.tv_usec-start.tv_usec)/1000.0) << " ms" << endl;
     
-	int remain = s->remain();
+	uint32_t remain = s->remain();
 	if (remain > 0) {
 		cout << "\tFür " << remain << " Felder wurde keine Lösung gefunden!" << endl;
 	}
 	cout << endl;
     
     
-    if (!s->print_s(true, string(argv[1]).append("-Lösung"))) {
+    if (!s->print_s(true, string(argv[1]).append("-loesung"))) {
 		cout << "#Fehler:\tLösungsdatei konnte nicht geschrieben werden!\n" << endl;
         return EXIT_FAILURE;
     }

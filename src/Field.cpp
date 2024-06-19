@@ -1,55 +1,52 @@
-#include <cstdlib>
-#include <cstdio>
 #include "Solver.hpp"
 
 using namespace std;
 
-unsigned int bit_pow (const int exp) {
-	if (exp < 0) {	abort(); }
+uint32_t bit_pow (const uint32_t exp) {
+	if (exp < 0 || exp > 31) {	abort(); }
 	return (1 << exp);
 }
 
-int int_div (const int numerator, const int denominator) {
+uint32_t int_div (const uint32_t numerator, const uint32_t denominator) {
 	return (numerator / denominator);
 }
 
-Field::Field(const int size, const int i, const int j, const int k):
-	date(bit_pow(size)-1),   // Alle relevanten Bits auf 1 (erstes Bit == 1 und nicht 0)
-	length(size), possible(size), startdate(false), row(NULL), col(NULL), box(NULL), I(i), J(j), K(k)
+Field::Field(const uint32_t size, const uint32_t i, const uint32_t j, const uint32_t k):
+	m_date(bit_pow(size)-1),   // Alle relevanten Bits auf 1 (erstes Bit == 1 und nicht 0)
+	m_length(size), m_possible(size), m_startdate(false), m_row(nullptr), m_col(nullptr), m_box(nullptr), m_i(i), m_j(j), m_k(k)
 	{
 }
 
-bool Field::set_data(Field **dates, const int blocklength) {
-
-	int count = 0;
-	row = (Field **) malloc((length-1) * sizeof(Field *));
-	if (row==NULL) { return false; }
-	for (int j=0; j<length; j++) {
-		if (j!=J) {
-			row[count] = &dates[I][j];
+bool Field::set_data(Field ***dates, const uint32_t blocklength) {
+	uint32_t count = 0;
+	m_row = static_cast<Field **>(malloc((m_length-1) * sizeof(Field *)));
+	if (!m_row) { return false; }
+	for (uint32_t j=0; j<m_length; j++) {
+		if (j!=m_j) {
+			m_row[count] = dates[m_i][j];
 			count++;
 		}
 	}
 
 	count = 0;
-	col = (Field **) malloc((length-1) * sizeof(Field *));
-	if (col==NULL) { return false; }
-	for (int i=0; i<length; i++) {
-		if (i!=I) {
-			col[count] = &dates[i][J];
+	m_col = static_cast<Field **>(malloc((m_length-1) * sizeof(Field *)));
+	if (!m_col) { return false; }
+	for (uint32_t i=0; i<m_length; i++) {
+		if (i!=m_i) {
+			m_col[count] = dates[i][m_j];
 			count++;
 		}
 	}
 
 	count = 0;
-	box = (Field **) malloc((blocklength*blocklength-1) * sizeof(Field *));
-	if (box==NULL) { return false; }
-	int rowblock = int_div(I, blocklength);   	// Achtung: liefert nur ganzzahligen Teil. alt: (I - (I % blocklength)) / blocklength
-	int colblock = int_div(J, blocklength);
-	for (int i=(rowblock*blocklength); i<((rowblock+1)*blocklength); i++) {
-		for (int j=(colblock*blocklength); j<((colblock+1)*blocklength); j++) {
-			if ((i!=I) || (j!=J)) {
-				box[count] = &dates[i][j];
+	m_box = static_cast<Field **>(malloc((blocklength*blocklength-1) * sizeof(Field *)));
+	if (!m_box) { return false; }
+	uint32_t rowblock = int_div(m_i, blocklength);   	// Achtung: liefert nur ganzzahligen Teil. alt: (I - (I % blocklength)) / blocklength
+	uint32_t colblock = int_div(m_j, blocklength);
+	for (uint32_t i=(rowblock*blocklength); i<((rowblock+1)*blocklength); i++) {
+		for (uint32_t j=(colblock*blocklength); j<((colblock+1)*blocklength); j++) {
+			if ((i!=m_i) || (j!=m_j)) {
+				m_box[count] = dates[i][j];
 				count++;
 			}
 		}
@@ -58,49 +55,45 @@ bool Field::set_data(Field **dates, const int blocklength) {
 	return true;
 }
 
-void Field::set_date(const unsigned int number) {
-
-	unsigned int num = 1;
-	possible = length;
-	for (int i=0; i<length; i++) {
+void Field::set_date(const uint32_t number) {
+	uint32_t num = 1;
+	m_possible = m_length;
+	for (uint32_t i=0; i<m_length; i++) {
 		if ((num & number) == 0) {
-			possible--;
+			m_possible--;
 		}
 		num <<= 1;
 	}
 
-	date = number;
+	m_date = number;
 }
 
 bool Field::check_row() const {
-
-	int count = 1;
-	for (int j=0; j<(length-1); j++) {
-		if (date == row[j]->get_date()) { count++; }
+	uint32_t count = 1;
+	for (uint32_t j=0; j<(m_length-1); j++) {
+		if (m_date == m_row[j]->get_date()) { count++; }
 	}
-	if (count == possible) { return true; }
+	if (count == m_possible) { return true; }
 
 	return false;
 }
 
 bool Field::check_col() const {
-
-	int count = 1;
-	for (int i=0; i<(length-1); i++) {
-		if (date == col[i]->get_date()) { count++; }
+	uint32_t count = 1;
+	for (uint32_t i=0; i<(m_length-1); i++) {
+		if (m_date == m_col[i]->get_date()) { count++; }
 	}
-	if (count == possible) { return true; }
+	if (count == m_possible) { return true; }
 
 	return false;
 }
 
 bool Field::check_box() const {
-
-	int count = 1;
-	for (int k=0; k<(length-1); k++) {
-		if (date == box[k]->get_date()) { count++; }
+	uint32_t count = 1;
+	for (uint32_t k=0; k<(m_length-1); k++) {
+		if (m_date == m_box[k]->get_date()) { count++; }
 	}
-	if (count == possible) { return true; }
+	if (count == m_possible) { return true; }
 
 	return false;
 }
@@ -109,32 +102,31 @@ bool Field::check_box() const {
 #define CASES_COLOR "\033[0;33m"
 #define COLOR_CLEAR "\033[m"
 string Field::print_date(const bool cases, const bool color) const {
-
 	string sdate;
-	unsigned int num = 1;
+	uint32_t num = 1;
 	char c[4];
 
-	if (!cases && (possible > 1)) {
-		if (length < 10) {
+	if (!cases && (m_possible > 1)) {
+		if (m_length < 10) {
 			sdate.append("~");
 		} else {
 			sdate.append("~~");
 		}
 
 	} else {
-		if (startdate && color) {
+		if (m_startdate && color) {
 			sdate.append(START_COLOR);
-		} else if ((possible > 1) && color) {
+		} else if ((m_possible > 1) && color) {
 			sdate.append(CASES_COLOR);
 		}
-		for (int i=0; i<length; i++) {
-			if ((num & date) != 0) {
-				if ((length > 10) && (i+1 < 10)) {
+		for (uint32_t i=0; i<m_length; i++) {
+			if ((num & m_date) != 0) {
+				if ((m_length > 10) && (i+1 < 10)) {
 					sdate.append(" ");
 				}
 				sprintf(c, "%d", i+1);
 				sdate.append(c);
-				if (possible > 1) {
+				if (m_possible > 1) {
 					sdate.append(",");
 				}
 			}

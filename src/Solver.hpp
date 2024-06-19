@@ -2,23 +2,31 @@
 #define SOLVER
 
 #include <string>
+#include <iostream>
+#include <fstream>
+#include <cstdlib>
+#include <cstdio>
+#include <cmath>
+#include <cctype>
+#include <cstdint>
+#include <sys/time.h>
 
-unsigned int bit_pow(const int exp);
-int int_div(const int numerator, const int denominator);
+uint32_t bit_pow(const uint32_t exp);
+uint32_t int_div(const uint32_t numerator, const uint32_t denominator);
 
 class Field;
 
 
 class Sudoku {
 	private:
-		Field **dates;
-		int length;
-		int blocklength;
-		int startdates;
-		bool box_counts;
+		Field ***m_dates;
+		uint32_t m_length;
+		uint32_t m_blocklength;
+		uint32_t m_startdates;
+		bool m_box_counts;
 
-		bool set_data(const int size);
-		bool fill(const int date, const int i, const int j);
+		bool set_data(const uint32_t size);
+		bool fill(const uint32_t date, const uint32_t i, const uint32_t j);
 		bool check_in();
 
 	public:
@@ -27,7 +35,7 @@ class Sudoku {
 
 		bool read(const std::string argv);
 		bool print_s(const bool cases, const std::string argv = "") const;
-		int remain() const;
+		uint32_t remain() const;
 
 		void solve();
 
@@ -36,32 +44,32 @@ class Sudoku {
 
 class Field {
 	private:
-		unsigned int date;
-		int length;
-		int possible;
-		bool startdate;
-		Field **row;
-		Field **col;
-		Field **box;
+		uint32_t m_date;
+		uint32_t m_length;
+		uint32_t m_possible;
+		bool m_startdate;
+		Field **m_row;
+		Field **m_col;
+		Field **m_box;
 
 		bool check_row() const;
 		bool check_col() const;
 		bool check_box() const;
 
 	protected:
-		int I;
-		int J;
-		int K;
+		uint32_t m_i;
+		uint32_t m_j;
+		uint32_t m_k;
 
 	public:
-		Field(const int size, const int i, const int j, const int k);
-		bool set_data(Field **dates, const int blocklength);
-		void set_date(const unsigned int num);
-		inline void set_is_startdate() { startdate = true; }
+		Field(const uint32_t size, const uint32_t i, const uint32_t j, const uint32_t k);
+		bool set_data(Field ***dates, const uint32_t blocklength);
+		void set_date(const uint32_t num);
+		inline void set_is_startdate() { m_startdate = true; }
 
-		inline unsigned int get_date() const { return date; }
-		std::string print_date(const bool cases, const bool color) const;
-		inline int get_possible() const {return possible; }
+		inline uint32_t get_date() const { return m_date; }
+		std::string 	print_date(const bool cases, const bool color) const;
+		inline uint32_t get_possible() const {return m_possible; }
 
 		bool erase(const bool box_counts) const;
 		bool compare(const bool box_counts) const;
