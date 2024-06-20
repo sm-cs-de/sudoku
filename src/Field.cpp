@@ -13,6 +13,22 @@ uint32_t int_div(const uint32_t numerator, const uint32_t denominator) {
 	return (numerator / denominator);
 }
 
+string bin_str(const uint32_t date, const uint32_t length) {
+	string sdate;
+	uint32_t num = 1 << (length-1);
+
+	for (uint32_t i=0; i<length; i++) {
+		if ((num & date) != 0) {
+			sdate += "1";
+		} else {
+			sdate += "0";
+		}
+		num >>= 1;
+	}
+
+	return sdate;
+}
+
 Field::Field(const uint32_t size, const uint32_t i, const uint32_t j, const uint32_t k) :
 		m_date(bit_pow(size) - 1), // Alle relevanten Bits auf 1 (erstes Bit == 1 und nicht 0)
 		m_length(size), m_possible(size), m_startdate(false), m_row(nullptr), m_col(
@@ -159,4 +175,8 @@ string Field::print_date(const bool cases, const bool color) const {
 	}
 
 	return sdate;
+}
+
+string Field::print_date_bin() const {
+	return bin_str(m_date, m_length);
 }

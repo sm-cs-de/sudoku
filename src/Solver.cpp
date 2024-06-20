@@ -45,7 +45,3 @@ int main(int argc, char *argv[]) {
 
 	return EXIT_SUCCESS;
 }
-
-/*
-TODO: 'line' hängt sich ab und zu auf (test_9c?)
-*/

@@ -13,6 +13,7 @@
 
 uint32_t bit_pow(const uint32_t exp);
 uint32_t int_div(const uint32_t numerator, const uint32_t denominator);
+std::string bin_str(const uint32_t date, const uint32_t length);
 
 class Field;
 
@@ -69,13 +70,19 @@ class Field {
 
 		inline uint32_t get_date() const { return m_date; }
 		std::string 	print_date(const bool cases, const bool color) const;
+		std::string 	print_date_bin() const;
 		inline uint32_t get_possible() const {return m_possible; }
 
-		bool erase(const bool box_counts) const; 	/* löscht Wert aus anderen Feldern wenn unikat */
-		bool compare(const bool box_counts) const;	/* Erweiterung von erase für Paare, Trippel, usw. */
-		bool single();								/* löscht alle Werte die nicht unikat sind (wenn dieser Fall zutrifft) */
-		bool line(const bool box_counts) const;		/* löscht Werte aus anderen Boxen, wenn in dieser Box-Spalte/-Zeile unikat */
+		bool erase(const bool box_counts) const; 	/* Wenn nur noch ein Wert möglich ist, wird dieser in anderen Feldern geöscht */
+		bool compare(const bool box_counts) const;	/* Identifikation von Paaren, Trippeln, usw. und entspr. löschen anderen Feldern */
+		bool single();								/* Prüft ob Feld unikaten Wert enthält und entfernt die anderen Möglichkeiten */
+		bool line(const bool box_counts) const;		/* Prüft ob Feld unikaten Wert enthält und löscht Werte aus anderen Feldern (in entspr. Spalte/Zeile) */
 };
 
+// TODO: algoritmen erase() und line() zusammenfassen:
+// - wenn ein wert in zeile/spalte/box unikat ist, kann er überall entspr. als option gelöscht werden.
+// - löschen muss auch erweitert erfolgen, d.h. z.B. ein zeilen-unikater wert kann auch in der zugehörigen box gelöscht werden)
+// - ggf. ist auch ein zusammenfassen mit single() möglich
+// - so dass am ende ein algorithmus existert, der unikate werte behandelt
 
 #endif

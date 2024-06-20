@@ -140,6 +140,7 @@ bool Field::single() {
 	uint32_t new_row = m_date & ~all_row;
 	uint32_t new_col = m_date & ~all_col;
 	uint32_t new_box = m_date & ~all_box;
+	//cout << bin_str(~all_row, m_length) << "  " << bin_str(~all_col, m_length) << "  " << bin_str(~all_box, m_length) << endl;
 
 	uint32_t newdate = new_row | new_col | new_box;
 	if (newdate > 0) {

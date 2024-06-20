@@ -45,7 +45,7 @@ bool Sudoku::read(const string argv) {
 
 	double sqr = sqrt(count);
 	if(floor(sqr) != sqr) {
-		cout << "#Fehler:\tDie Werteanzahl muss quadratisch sein! (aktuelle Länge: " << sqr << "-" << count <<")" << endl;
+		cout << "#Fehler:\tDie Werteanzahl muss quadratisch sein! (aktuelle Länge: " << sqr << "-" << count <<" )" << endl;
 		return false;
 	}
 	count = static_cast<uint32_t>(sqr);
