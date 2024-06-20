@@ -199,7 +199,7 @@ bool Sudoku::print_s(const bool cases, const string argv) const {
 		for(uint32_t j=0; j<m_length; j++) {
 			if(!os->fail()) {
 				*os << m_dates[i][j]->print_date(cases, color) << " " << flush;
-				if (j>0 && (j+1)%m_blocklength == 0 && j<m_length-1) {
+				if (!file && j>0 && (j+1)%m_blocklength == 0 && j<m_length-1) {
 					*os << "|";
 				}
 			} else {
@@ -209,7 +209,7 @@ bool Sudoku::print_s(const bool cases, const string argv) const {
 		}
 		*os << endl;
 
-		if (i>0 && (i+1)%m_blocklength == 0 && i<m_length-1) {
+		if (!file && i>0 && (i+1)%m_blocklength == 0 && i<m_length-1) {
 			*os << "\t";
 			for(uint32_t j=0; j<m_length; j++) {
 				if (m_length >= 10) {

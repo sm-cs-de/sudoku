@@ -2,10 +2,21 @@
 
 using namespace std;
 
-void Sudoku::solve() {
+bool Sudoku::solve() {
+	bool solvable = true;
+
 	bool changed = false;
 	do {
 		changed = false;
+
+		for (uint32_t i=0; i<m_length; i++) {
+			for (uint32_t j=0; j<m_length; j++) {
+				if (m_dates[i][j]->get_date() == 0) {
+					solvable = false;
+				}
+			}
+		}
+		if (!solvable) { break; }
 
 		for (uint32_t i=0; i<m_length; i++) {
 			for (uint32_t j=0; j<m_length; j++) {
@@ -36,6 +47,8 @@ void Sudoku::solve() {
 		//if (changed) { continue; }
 
 	} while (changed);
+
+	return solvable;
 }
 
 bool Field::erase(const bool box_counts) const {

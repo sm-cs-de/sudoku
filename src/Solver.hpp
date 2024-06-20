@@ -37,7 +37,7 @@ class Sudoku {
 		bool print_s(const bool cases, const std::string argv = "") const;
 		uint32_t remain() const;
 
-		void solve();
+		bool solve();
 
 };
 

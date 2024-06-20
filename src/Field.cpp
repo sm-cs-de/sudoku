@@ -139,12 +139,13 @@ string Field::print_date(const bool cases, const bool color) const {
 		} else if ((m_possible > 1) && color) {
 			sdate.append(CASES_COLOR);
 		}
-		for (uint32_t i = 0; i < m_length; i++) {
+		if (m_date == 0) sdate.append("#");
+		for (uint32_t i=0; i<m_length; i++) {
 			if ((num & m_date) != 0) {
-				if ((m_length > 10) && (i + 1 < 10)) {
+				if ((m_length > 10) && (i+1 < 10)) {
 					sdate.append(" ");
 				}
-				sprintf(c, "%d", i + 1);
+				sprintf(c, "%d", i+1);
 				sdate.append(c);
 				if (m_possible > 1) {
 					sdate.append(",");

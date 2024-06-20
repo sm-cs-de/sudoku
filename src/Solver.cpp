@@ -23,13 +23,15 @@ int main(int argc, char *argv[]) {
 	timeval start, end;
 	gettimeofday(&start, 0);
 
-	s->solve(); 
+	bool solvable = s->solve();
 
     gettimeofday(&end, 0);
     cout << "\tZeitbedarf: " << ((end.tv_sec-start.tv_sec)*1000 + (end.tv_usec-start.tv_usec)/1000.0) << " ms" << endl;
     
 	uint32_t remain = s->remain();
-	if (remain > 0) {
+	if (!solvable) {
+		cout << "\tDas Sudoku ist nicht lösbar!" << endl;
+	} else if (remain > 0) {
 		cout << "\tFür " << remain << " Felder wurde keine Lösung gefunden!" << endl;
 	}
 	cout << endl;
@@ -45,6 +47,5 @@ int main(int argc, char *argv[]) {
 }
 
 /*
-TODO: Herausfinden, warum es bei `test_9` nicht richtig funktioniert
 TODO: 'line' hängt sich ab und zu auf (test_9c?)
 */
